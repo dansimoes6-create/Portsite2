@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PotarDev — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --void: #06060F;
+    --deep: #0D0B1A;
+    --surface: #13102A;
+    --surface2: #1C1838;
+    --purple: #8B2FC9;
+    --purple-bright: #A855F7;
+    --lilac: #C084FC;
+    --lilac-soft: #D8B4FE;
+    --white: #F0EEFF;
+    --muted: #9990CC;
+    --pixel1: #7C3AED;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--void);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139,47,201,0.012) 2px, rgba(139,47,201,0.012) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 1.1rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(6,6,15,0.7);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(139,47,201,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--lilac);
+    letter-spacing: 0.1em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--purple-bright); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+  }
+  .nav-links a::before { content: '// '; color: var(--pixel1); opacity: 0.6; }
+  .nav-links a:hover { color: var(--lilac-soft); }
+
+  /* LANG TOGGLE */
+  .lang-toggle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    background: rgba(139,47,201,0.15);
+    border: 1px solid rgba(139,47,201,0.35);
+    border-radius: 4px;
+    color: var(--lilac);
+    padding: 0.35rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+  }
+  .lang-toggle:hover {
+    background: rgba(139,47,201,0.28);
+    border-color: var(--purple-bright);
+    color: var(--lilac-soft);
+  }
+  .lang-flag { font-size: 0.9rem; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 6rem 2rem 4rem;
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(139,47,201,0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(139,47,201,0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 40%, transparent 100%);
+  }
+
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    animation: breathe 6s ease-in-out infinite;
+  }
+  .orb-1 { width:500px; height:500px; background:radial-gradient(circle,rgba(124,58,237,.25) 0%,transparent 70%); top:-100px; left:-100px; }
+  .orb-2 { width:400px; height:400px; background:radial-gradient(circle,rgba(168,85,247,.2) 0%,transparent 70%); bottom:-50px; right:-50px; animation-delay:3s; }
+
+  @keyframes breathe {
+    0%,100% { transform:scale(1); opacity:1; }
+    50% { transform:scale(1.15); opacity:.7; }
+  }
+
+  .pixels { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+  .px {
+    position:absolute;
+    width:6px; height:6px;
+    background:var(--purple);
+    animation: floatPx var(--dur) ease-in-out infinite;
+    animation-delay: var(--delay);
+    opacity:0;
+  }
+  @keyframes floatPx {
+    0% { transform:translateY(0) translateX(0); opacity:0; }
+    20% { opacity:.8; }
+    80% { opacity:.4; }
+    100% { transform:translateY(-120px) translateX(var(--drift)); opacity:0; }
+  }
+
+  /* LOGO */
+  .logo-hero {
+    width: 190px;
+    height: 190px;
+    filter: drop-shadow(0 0 28px rgba(168,85,247,.55)) drop-shadow(0 0 60px rgba(139,47,201,.3));
+    animation: logoFloat 4s ease-in-out infinite;
+    margin-bottom: 2.5rem;
+  }
+  @keyframes logoFloat {
+    0%,100% { transform:translateY(0) rotate(-1deg); }
+    50% { transform:translateY(-12px) rotate(1deg); }
+  }
+
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+  }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--purple-bright);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .hero-tag::before,.hero-tag::after { content:''; width:40px; height:1px; background:linear-gradient(90deg,transparent,var(--purple-bright)); }
+  .hero-tag::after { background:linear-gradient(90deg,var(--purple-bright),transparent); }
+
+  h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.4rem,6vw,4.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #fff 0%, var(--lilac-soft) 40%, var(--purple-bright) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(0.85rem,2vw,1.1rem);
+    font-weight: 400;
+    color: var(--purple-bright);
+    letter-spacing: 0.3em;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+  }
+
+  .hero-desc {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 auto 3rem;
+  }
+  .hero-desc strong { color: var(--lilac-soft); font-weight:500; }
+
+  .hero-ctas { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+
+  .btn-primary {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 0.85rem 2rem;
+    background: linear-gradient(135deg, var(--purple), var(--purple-bright));
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    display: inline-block;
+  }
+  .btn-primary::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,var(--purple-bright),var(--lilac)); opacity:0; transition:opacity .25s; }
+  .btn-primary:hover::before { opacity:1; }
+  .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(139,47,201,.5); }
+  .btn-primary span { position:relative; z-index:1; }
+
+  .btn-secondary {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 0.85rem 2rem;
+    background: transparent;
+    color: var(--lilac);
+    border: 1px solid rgba(192,132,252,.4);
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s;
+    clip-path: polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color:var(--lilac); color:var(--lilac-soft); background:rgba(192,132,252,.08); transform:translateY(-2px); }
+
+  .scroll-hint { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.5rem; opacity:.4; }
+  .scroll-hint span { font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.2em; color:var(--muted); text-transform:uppercase; }
+  .scroll-bar { width:1px; height:40px; background:linear-gradient(180deg,var(--purple-bright),transparent); animation:scrollPulse 2s ease-in-out infinite; }
+  @keyframes scrollPulse { 0%,100%{opacity:1;transform:scaleY(1)} 50%{opacity:.3;transform:scaleY(.5)} }
+
+  /* ── SECTIONS ── */
+  .section-wrap { position:relative; z-index:1; padding:6rem 2rem; max-width:1100px; margin:0 auto; }
+  .section-wrap-narrow { max-width:800px; }
+
+  .section-header { margin-bottom:3.5rem; }
+  .section-label {
+    font-family:'JetBrains Mono',monospace;
+    font-size:.7rem;
+    letter-spacing:.25em;
+    color:var(--purple-bright);
+    text-transform:uppercase;
+    margin-bottom:1rem;
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+  }
+  .section-label::after { content:''; flex:1; max-width:60px; height:1px; background:var(--purple); }
+  h2 { font-family:'Orbitron',monospace; font-size:clamp(1.6rem,3vw,2.3rem); font-weight:700; color:var(--white); line-height:1.2; }
+  h2 span { color:var(--purple-bright); }
+
+  /* ── ABOUT ── */
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+
+  .about-text { font-size:1rem; line-height:1.85; color:var(--muted); }
+  .about-text p+p { margin-top:1.25rem; }
+  .about-text strong { color:var(--lilac-soft); font-weight:500; }
+
+  .about-stats { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+
+  .stat-card {
+    background:var(--surface);
+    border:1px solid rgba(139,47,201,.2);
+    border-radius:6px;
+    padding:1.5rem 1.25rem;
+    position:relative;
+    overflow:hidden;
+    transition:border-color .25s;
+  }
+  .stat-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background:linear-gradient(90deg,var(--purple),var(--purple-bright)); transform:scaleX(0); transition:transform .3s; transform-origin:left; }
+  .stat-card:hover::before { transform:scaleX(1); }
+  .stat-card:hover { border-color:rgba(139,47,201,.5); }
+  .stat-num { font-family:'Orbitron',monospace; font-size:2rem; font-weight:900; color:var(--purple-bright); line-height:1; margin-bottom:.5rem; }
+  .stat-label { font-size:.78rem; color:var(--muted); font-family:'JetBrains Mono',monospace; }
+
+  /* TERMINAL */
+  .terminal { background:#080813; border:1px solid rgba(139,47,201,.3); border-radius:8px; overflow:hidden; margin-bottom:1.5rem; }
+  .terminal-bar { background:var(--surface); padding:.7rem 1rem; display:flex; align-items:center; gap:.5rem; border-bottom:1px solid rgba(139,47,201,.2); }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot-r { background:#FF5F57; } .dot-y { background:#FFBD2E; } .dot-g { background:#28C840; }
+  .terminal-title { font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--muted); margin:0 auto; letter-spacing:.05em; }
+  .terminal-body { padding:1.5rem; font-family:'JetBrains Mono',monospace; font-size:.78rem; line-height:2; }
+  .t-prompt { color:var(--purple-bright); }
+  .t-cmd { color:var(--lilac-soft); }
+  .t-comment { color:#444; }
+  .t-str { color:#A8FF78; }
+  .t-key { color:var(--lilac); }
+  .t-num { color:#F8C471; }
+  .t-cursor { display:inline-block; width:8px; height:14px; background:var(--purple-bright); animation:blink 1s step-end infinite; vertical-align:middle; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* ── SKILLS ── */
+  .skills-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.25rem; }
+  .skill-group {
+    background:var(--surface);
+    border:1px solid rgba(139,47,201,.15);
+    border-radius:8px;
+    padding:1.75rem;
+    transition:all .3s;
+  }
+  .skill-group:hover { border-color:rgba(139,47,201,.4); background:var(--surface2); transform:translateY(-3px); }
+  .skill-icon { font-size:1.4rem; margin-bottom:1rem; }
+  .skill-group h3 { font-family:'Orbitron',monospace; font-size:.82rem; font-weight:600; color:var(--lilac); letter-spacing:.05em; margin-bottom:1.25rem; }
+  .skill-tags { display:flex; flex-wrap:wrap; gap:.5rem; }
+  .tag { font-family:'JetBrains Mono',monospace; font-size:.68rem; padding:.3rem .75rem; background:rgba(139,47,201,.12); border:1px solid rgba(139,47,201,.25); border-radius:3px; color:var(--muted); transition:all .2s; }
+  .skill-group:hover .tag { background:rgba(168,85,247,.15); border-color:rgba(168,85,247,.35); color:var(--lilac-soft); }
+
+  /* ── TIMELINE ── */
+  .timeline { position:relative; padding-left:2.5rem; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(180deg,var(--purple),transparent); }
+  .timeline-item { position:relative; padding-bottom:3rem; }
+  .timeline-item:last-child { padding-bottom:0; }
+  .timeline-dot { position:absolute; left:-2.625rem; top:.25rem; width:10px; height:10px; background:var(--purple-bright); border-radius:50%; box-shadow:0 0 12px var(--purple-bright); }
+  .timeline-dot.future { background:rgba(168,85,247,.4); box-shadow:0 0 12px rgba(168,85,247,.3); }
+  .timeline-date { font-family:'JetBrains Mono',monospace; font-size:.68rem; color:var(--purple-bright); letter-spacing:.1em; margin-bottom:.5rem; }
+  .timeline-item h3 { font-family:'Orbitron',monospace; font-size:.92rem; font-weight:600; color:var(--white); margin-bottom:.5rem; }
+  .timeline-item p { font-size:.875rem; line-height:1.75; color:var(--muted); }
+
+  /* ── CONTACT ── */
+  .contact-wrap { max-width:700px; margin:0 auto; padding:0 2rem 8rem; position:relative; z-index:1; text-align:center; }
+  .contact-wrap h2 { margin-bottom:1rem; }
+
+  .contact-links { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+  .contact-link {
+    display:flex; align-items:center; gap:.6rem;
+    padding:.85rem 1.5rem;
+    background:var(--surface);
+    border:1px solid rgba(139,47,201,.25);
+    border-radius:6px;
+    color:var(--muted);
+    text-decoration:none;
+    font-family:'JetBrains Mono',monospace;
+    font-size:.78rem;
+    transition:all .25s;
+  }
+  .contact-link:hover { border-color:var(--purple-bright); color:var(--lilac-soft); background:var(--surface2); transform:translateY(-2px); box-shadow:0 8px 24px rgba(139,47,201,.2); }
+  .contact-icon { font-size:1.05rem; }
+
+  /* ── DIVIDER ── */
+  .divider { max-width:1100px; margin:0 auto; padding:0 2rem; position:relative; z-index:1; }
+  .divider hr { border:none; height:1px; background:linear-gradient(90deg,transparent,rgba(139,47,201,.3),transparent); }
+
+  /* ── FOOTER ── */
+  footer { border-top:1px solid rgba(139,47,201,.15); padding:2rem; text-align:center; position:relative; z-index:1; }
+  footer p { font-family:'JetBrains Mono',monospace; font-size:.68rem; color:rgba(153,144,204,.4); letter-spacing:.05em; }
+  footer span { color:var(--purple-bright); }
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:768px){
+    nav { padding:1rem 1.25rem; }
+    .nav-links { gap:1.25rem; }
+    .about-grid { grid-template-columns:1fr; }
+  }
+  @media(max-width:520px){
+    .nav-links { display:none; }
+    .hero-ctas { flex-direction:column; align-items:center; }
+    .lang-toggle .lang-label { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#hero"><span>&lt;</span>PotarDev<span>/&gt;</span></a>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#about" data-i18n="nav_about">about</a></li>
+      <li><a href="#skills" data-i18n="nav_skills">skills</a></li>
+      <li><a href="#journey" data-i18n="nav_journey">journey</a></li>
+      <li><a href="#contact" data-i18n="nav_contact">contact</a></li>
+    </ul>
+    <button class="lang-toggle" id="langBtn" onclick="toggleLang()">
+      <span class="lang-flag" id="langFlag">🇧🇷</span>
+      <span class="lang-label" id="langLabel">PT</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" style="max-width:none; padding:6rem 2rem 4rem;">
+  <div class="hero-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="pixels" id="pixels"></div>
+
+  <div class="hero-content">
+    <!-- LOGO — faithful to the uploaded image -->
+    <svg class="logo-hero" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Outer ring gradient: bright pink-purple on top, deep violet on bottom -->
+        <linearGradient id="ringTop" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#CC44FF"/>
+          <stop offset="50%" stop-color="#9933EE"/>
+          <stop offset="100%" stop-color="#5511AA"/>
+        </linearGradient>
+        <!-- Code symbol gradient: white center → soft lilac edges (3D bevel look) -->
+        <linearGradient id="codeGrad" x1="20%" y1="10%" x2="80%" y2="90%">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="45%" stop-color="#E0C8FF"/>
+          <stop offset="100%" stop-color="#9944CC"/>
+        </linearGradient>
+        <!-- Controller fill -->
+        <linearGradient id="ctrlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1A0A2E"/>
+          <stop offset="100%" stop-color="#0D0520"/>
+        </linearGradient>
+        <!-- Glow filter for ring -->
+        <filter id="ringGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Glow for code symbol -->
+        <filter id="codeGlow" x="-15%" y="-15%" width="130%" height="130%">
+          <feGaussianBlur stdDeviation="2.5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Subtle inner shadow for depth -->
+        <radialGradient id="innerBg" cx="50%" cy="40%" r="55%">
+          <stop offset="0%" stop-color="#1A0830"/>
+          <stop offset="100%" stop-color="#0A0520"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Dark inner circle background -->
+      <circle cx="110" cy="110" r="96" fill="url(#innerBg)"/>
+
+      <!-- Outer ring — thick, glowing, gradient purple/pink -->
+      <circle cx="110" cy="110" r="96" fill="none" stroke="url(#ringTop)" stroke-width="7" filter="url(#ringGlow)" opacity="0.95"/>
+      <!-- Soft halo ring behind -->
+      <circle cx="110" cy="110" r="96" fill="none" stroke="rgba(180,60,255,0.18)" stroke-width="18"/>
+      <!-- Speed-stroke arc (top-left brush sweep like the logo) -->
+      <path d="M 38,55 A 90,90 0 0,1 185,75" fill="none" stroke="rgba(200,100,255,0.45)" stroke-width="5" stroke-linecap="round" filter="url(#ringGlow)"/>
+
+      <!-- Scattered pixel squares top-left (matching logo exactly) -->
+      <rect x="14" y="38" width="9" height="9" fill="#9333EA" opacity="0.95"/>
+      <rect x="27" y="24" width="12" height="12" fill="#A855F7" opacity="0.9"/>
+      <rect x="42" y="36" width="7" height="7" fill="#7C3AED" opacity="0.8"/>
+      <rect x="18" y="54" width="7" height="7" fill="#C084FC" opacity="0.7"/>
+      <rect x="32" y="50" width="5" height="5" fill="#8B2FC9" opacity="0.6"/>
+      <rect x="10" y="64" width="5" height="5" fill="#A855F7" opacity="0.5"/>
+      <rect x="48" y="22" width="5" height="5" fill="#C084FC" opacity="0.55"/>
+      <rect x="58" y="30" width="4" height="4" fill="#9333EA" opacity="0.45"/>
+
+      <!-- Lightning bolt bottom-left of ring (detail from logo) -->
+      <path d="M 42,148 L 36,162 L 44,158 L 38,174" fill="none" stroke="rgba(168,85,247,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+      <!-- ── CODE SYMBOL </> ── -->
+      <!-- Left bracket < -->
+      <g filter="url(#codeGlow)">
+        <!-- < shape as two angled strokes meeting at a point -->
+        <polyline points="73,62 47,110 73,158" fill="none" stroke="url(#codeGrad)" stroke-width="14" stroke-linecap="square" stroke-linejoin="miter"/>
+        <!-- / slash -->
+        <line x1="103" y1="60" x2="87" y2="160" stroke="url(#codeGrad)" stroke-width="13" stroke-linecap="square"/>
+        <!-- > shape -->
+        <polyline points="117,62 143,110 117,158" fill="none" stroke="url(#codeGrad)" stroke-width="14" stroke-linecap="square" stroke-linejoin="miter"/>
+      </g>
+
+      <!-- ── GAME CONTROLLER (bottom-right, overlapping code bracket) ── -->
+      <g transform="translate(136,142) scale(0.62)">
+        <!-- Controller body -->
+        <rect x="-50" y="-26" width="100" height="52" rx="26" fill="url(#ctrlGrad)" stroke="#8B2FC9" stroke-width="2.5"/>
+        <!-- Left grip bump -->
+        <ellipse cx="-32" cy="22" rx="18" ry="10" fill="url(#ctrlGrad)" stroke="#8B2FC9" stroke-width="2"/>
+        <!-- Right grip bump -->
+        <ellipse cx="32" cy="22" rx="18" ry="10" fill="url(#ctrlGrad)" stroke="#8B2FC9" stroke-width="2"/>
+        <!-- D-pad cross -->
+        <rect x="-44" y="-7" width="9" height="28" rx="1.5" fill="#A855F7"/>
+        <rect x="-52" y="1" width="25" height="10" rx="1.5" fill="#A855F7"/>
+        <!-- Face buttons: diamond layout -->
+        <circle cx="24" cy="-8" r="6" fill="#C084FC"/>
+        <circle cx="36" cy="4" r="6" fill="#9333EA"/>
+        <circle cx="24" cy="16" r="6" fill="#7C3AED"/>
+        <circle cx="12" cy="4" r="6" fill="#A855F7"/>
+        <!-- Center options button -->
+        <rect x="-5" y="-2" width="10" height="5" rx="2.5" fill="#6D28D9"/>
+        <!-- Left bumper -->
+        <rect x="-50" y="-34" width="20" height="8" rx="4" fill="#7C3AED"/>
+        <!-- Right bumper -->
+        <rect x="30" y="-34" width="20" height="8" rx="4" fill="#7C3AED"/>
+      </g>
+    </svg>
+
+    <div class="hero-tag" data-i18n="hero_tag">Indie Game Developer & Programmer</div>
+    <h1 data-i18n="hero_h1">Building<br>digital worlds</h1>
+    <p class="hero-sub">Code · Games · Dev</p>
+    <p class="hero-desc" data-i18n="hero_desc">
+      Beginner developer <strong>passionate about games and code</strong>. Turning ideas into interactive experiences, one project at a time.
+    </p>
+    <div class="hero-ctas">
+      <a href="#journey" class="btn-primary"><span data-i18n="cta_journey">My Journey</span></a>
+      <a href="#contact" class="btn-secondary" data-i18n="cta_contact">Get in Touch</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section-wrap">
+  <div class="section-header">
+    <p class="section-label"><span data-i18n="lbl_about">01 — About</span></p>
+    <h2 data-i18n="about_h2">The person <span>behind the code</span></h2>
+  </div>
+  <div class="about-grid">
+    <div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+          <span class="terminal-title">~/dev/portfolio — bash</span>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+          <div><span class="t-prompt">$ </span><span class="t-cmd">cat about.json</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-comment">{</span></div>
+          <div>&nbsp; <span class="t-key">"name"</span>: <span class="t-str">"PotarDev"</span>,</div>
+          <div>&nbsp; <span class="t-key">"role"</span>: <span class="t-str">"Indie Dev Beginner"</span>,</div>
+          <div>&nbsp; <span class="t-key">"passion"</span>: <span class="t-str">"Games &amp; Code"</span>,</div>
+          <div>&nbsp; <span class="t-key">"status"</span>: <span class="t-str">"Learning every day"</span>,</div>
+          <div>&nbsp; <span class="t-key">"coffee_today"</span>: <span class="t-num">∞</span></div>
+          <div><span class="t-comment">}</span></div>
+          <div>&nbsp;</div>
+          <div><span class="t-prompt">$ </span><span class="t-cursor"></span></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="about-text" id="aboutText">
+        <p>Hey! I'm <strong>PotarDev</strong>, a beginner indie developer taking my first steps into the world of game and software development. It all started with curiosity about how the games I love are made — and I never stopped.</p>
+        <p>I combine <strong>programming and creativity</strong> to build interactive experiences. Whether it's writing Lua scripts for mods, experimenting with 3D in the browser, or crafting web apps — I'm always learning something new.</p>
+        <p>The road is long, but every bug fixed is a win. <strong>I'm just getting started — and I can't wait to see how far it goes.</strong></p>
+      </div>
+      <br/>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-num">+1</div>
+          <div class="stat-label" data-i18n="stat_year">year of dev</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">∞</div>
+          <div class="stat-label" data-i18n="stat_bugs">bugs fixed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">100%</div>
+          <div class="stat-label" data-i18n="stat_dedication">dedication</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">0→∞</div>
+          <div class="stat-label" data-i18n="stat_projects">projects ahead</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<!-- SKILLS -->
+<div id="skills" class="section-wrap">
+  <div class="section-header">
+    <p class="section-label"><span data-i18n="lbl_skills">02 — Skills</span></p>
+    <h2 data-i18n="skills_h2">My tech <span>arsenal</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-icon">🎮</div>
+      <h3>Game Dev</h3>
+      <div class="skill-tags">
+        <span class="tag">Lua</span>
+        <span class="tag">YimMenu API</span>
+        <span class="tag">GTA V Modding</span>
+        <span class="tag">Three.js</span>
+        <span class="tag">Game Logic</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">🌐</div>
+      <h3>Web Dev</h3>
+      <div class="skill-tags">
+        <span class="tag">HTML5</span>
+        <span class="tag">CSS3</span>
+        <span class="tag">JavaScript</span>
+        <span class="tag">React</span>
+        <span class="tag">Node.js</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">⚙️</div>
+      <h3>Backend & Tools</h3>
+      <div class="skill-tags">
+        <span class="tag">Python</span>
+        <span class="tag">Git</span>
+        <span class="tag">REST APIs</span>
+        <span class="tag">VS Code</span>
+        <span class="tag">Linux</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-icon">🧠</div>
+      <h3 data-i18n="skill_learning">Learning</h3>
+      <div class="skill-tags">
+        <span class="tag">Unity</span>
+        <span class="tag">C#</span>
+        <span class="tag">Godot</span>
+        <span class="tag">Shader Programming</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><hr></div>
+
+<!-- JOURNEY -->
+<div id="journey" class="section-wrap section-wrap-narrow">
+  <div class="section-header">
+    <p class="section-label"><span data-i18n="lbl_journey">03 — Journey</span></p>
+    <h2 data-i18n="journey_h2">My <span>timeline</span></h2>
+  </div>
+  <div class="timeline" id="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-date" data-i18n="tj1_date">2024 — The Beginning</p>
+      <h3 data-i18n="tj1_h">First "Hello, World"</h3>
+      <p data-i18n="tj1_p">Started coding out of curiosity about games. First contact with HTML, CSS and JavaScript — the spark that started everything.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-date" data-i18n="tj2_date">2025 — Exploration</p>
+      <h3 data-i18n="tj2_h">Diving into Game Dev</h3>
+      <p data-i18n="tj2_p">Entered the modding universe with Lua and GTA V. Learned about scripting APIs, game logic and the importance of reading documentation.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <p class="timeline-date" data-i18n="tj3_date">2026 — Present</p>
+      <h3 data-i18n="tj3_h">Full-Stack & Real Products</h3>
+      <p data-i18n="tj3_p">Combining game dev with web development. Shipping real integrations and continuously building my portfolio from scratch.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot future"></div>
+      <p class="timeline-date" data-i18n="tj4_date">Future — Coming Soon</p>
+      <h3 data-i18n="tj4_h">First Published Game</h3>
+      <p data-i18n="tj4_p">The goal: ship my first complete indie game. Unity, Godot — whatever engine gets me there. The journey continues.</p>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><hr></div>
+
+<!-- CONTACT -->
+<div id="contact" class="contact-wrap" style="padding-top:6rem;">
+  <div class="section-header" style="margin-bottom:2rem;">
+    <p class="section-label" style="justify-content:center;"><span data-i18n="lbl_contact">04 — Contact</span></p>
+    <h2 data-i18n="contact_h2">Get in <span>touch</span></h2>
+  </div>
+  <p class="hero-desc" data-i18n="contact_desc">
+    Open to collaborations, projects and opportunities. If you have a game idea or just want to chat about dev, <strong>send me a message</strong>.
+  </p>
+  <div class="contact-links">
+    <a href="mailto:dansimoes6@gmail.com" class="contact-link">
+      <span class="contact-icon">📧</span> dansimoes6@gmail.com
+    </a>
+  </div>
+  <a href="mailto:dansimoes6@gmail.com" class="btn-primary"><span data-i18n="contact_btn">Send a Message</span></a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Made with <span>♥</span> + lots of caffeine · <span>&lt;PotarDev/&gt;</span> · 2026</p>
+</footer>
+
+<script>
+/* ── TRANSLATIONS ── */
+const i18n = {
+  en: {
+    nav_about:'about', nav_skills:'skills', nav_journey:'journey', nav_contact:'contact',
+    hero_tag:'Indie Game Developer & Programmer',
+    hero_h1:'Building<br>digital worlds',
+    hero_desc:'Beginner developer <strong>passionate about games and code</strong>. Turning ideas into interactive experiences, one project at a time.',
+    cta_journey:'My Journey', cta_contact:'Get in Touch',
+    lbl_about:'01 — About', about_h2:'The person <span>behind the code</span>',
+    stat_year:'year of dev', stat_bugs:'bugs fixed', stat_dedication:'dedication', stat_projects:'projects ahead',
+    lbl_skills:'02 — Skills', skills_h2:'My tech <span>arsenal</span>',
+    skill_learning:'Learning',
+    lbl_journey:'03 — Journey', journey_h2:'My <span>timeline</span>',
+    tj1_date:'2024 — The Beginning', tj1_h:'First "Hello, World"', tj1_p:'Started coding out of curiosity about games. First contact with HTML, CSS and JavaScript — the spark that started everything.',
+    tj2_date:'2025 — Exploration', tj2_h:'Diving into Game Dev', tj2_p:'Entered the modding universe with Lua and GTA V. Learned about scripting APIs, game logic and the importance of reading documentation.',
+    tj3_date:'2026 — Present', tj3_h:'Full-Stack & Real Products', tj3_p:'Combining game dev with web development. Shipping real integrations and continuously building my portfolio from scratch.',
+    tj4_date:'Future — Coming Soon', tj4_h:'First Published Game', tj4_p:'The goal: ship my first complete indie game. Unity, Godot — whatever engine gets me there. The journey continues.',
+    lbl_contact:'04 — Contact', contact_h2:'Get in <span>touch</span>',
+    contact_desc:'Open to collaborations, projects and opportunities. If you have a game idea or just want to chat about dev, <strong>send me a message</strong>.',
+    contact_btn:'Send a Message',
+    about_p1:'Hey! I\'m <strong>PotarDev</strong>, a beginner indie developer taking my first steps into the world of game and software development. It all started with curiosity about how the games I love are made — and I never stopped.',
+    about_p2:'I combine <strong>programming and creativity</strong> to build interactive experiences. Whether it\'s writing Lua scripts for mods, experimenting with 3D in the browser, or crafting web apps — I\'m always learning something new.',
+    about_p3:'The road is long, but every bug fixed is a win. <strong>I\'m just getting started — and I can\'t wait to see how far it goes.</strong>',
+  },
+  pt: {
+    nav_about:'sobre', nav_skills:'skills', nav_journey:'jornada', nav_contact:'contato',
+    hero_tag:'Desenvolvedor Indie & Programador',
+    hero_h1:'Construindo<br>mundos digitais',
+    hero_desc:'Dev iniciante <strong>apaixonado por games e código</strong>. Transformando ideias em experiências interativas, um projeto de cada vez.',
+    cta_journey:'Minha Jornada', cta_contact:'Entrar em Contato',
+    lbl_about:'01 — Sobre', about_h2:'A pessoa <span>por trás do código</span>',
+    stat_year:'ano de dev', stat_bugs:'bugs resolvidos', stat_dedication:'dedicação', stat_projects:'projetos pela frente',
+    lbl_skills:'02 — Habilidades', skills_h2:'Arsenal de <span>tecnologias</span>',
+    skill_learning:'Aprendendo',
+    lbl_journey:'03 — Jornada', journey_h2:'Minha <span>linha do tempo</span>',
+    tj1_date:'2024 — O Início', tj1_h:'Primeiro "Olá, Mundo"', tj1_p:'Comecei a programar por curiosidade sobre games. Primeiro contato com HTML, CSS e JavaScript — a faísca que iniciou tudo.',
+    tj2_date:'2025 — Exploração', tj2_h:'Mergulhando no Game Dev', tj2_p:'Entrei no universo de modding com Lua e GTA V. Aprendi sobre APIs de scripting, lógica de jogo e a importância da documentação.',
+    tj3_date:'2026 — Presente', tj3_h:'Full-Stack & Produtos Reais', tj3_p:'Combinando game dev com desenvolvimento web. Lançando integrações reais e construindo meu portfólio do zero.',
+    tj4_date:'Futuro — Em breve', tj4_h:'Primeiro Jogo Publicado', tj4_p:'O objetivo: lançar meu primeiro jogo indie completo. Unity, Godot — qualquer engine que me leve até lá. A jornada continua.',
+    lbl_contact:'04 — Contato', contact_h2:'Vamos <span>trabalhar juntos</span>',
+    contact_desc:'Aberto a colaborações, projetos e oportunidades. Se você tem uma ideia de jogo ou quer conversar sobre dev, <strong>me manda uma mensagem</strong>.',
+    contact_btn:'Enviar Mensagem',
+    about_p1:'Olá! Sou <strong>PotarDev</strong>, dev indie iniciante dando os primeiros passos no mundo do desenvolvimento de games e software. Tudo começou com curiosidade sobre como os jogos que amo são feitos — e não parei mais.',
+    about_p2:'Combino <strong>programação e criatividade</strong> para criar experiências interativas. Seja escrevendo scripts Lua para mods, experimentando 3D no navegador ou criando apps web — estou sempre aprendendo algo novo.',
+    about_p3:'A estrada é longa, mas cada bug resolvido é uma vitória. <strong>Tô só começando — e mal posso esperar para ver onde isso vai chegar.</strong>',
+  }
+};
+
+let lang = 'en';
+
+function toggleLang() {
+  lang = lang === 'en' ? 'pt' : 'en';
+  applyLang();
+}
+
+function applyLang() {
+  const t = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // About paragraphs (innerHTML with strong tags)
+  const at = document.getElementById('aboutText');
+  if (at) {
+    const ps = at.querySelectorAll('p');
+    if (ps[0]) ps[0].innerHTML = t.about_p1;
+    if (ps[1]) ps[1].innerHTML = t.about_p2;
+    if (ps[2]) ps[2].innerHTML = t.about_p3;
+  }
+  // Toggle button
+  document.getElementById('langFlag').textContent = lang === 'en' ? '🇧🇷' : '🇺🇸';
+  document.getElementById('langLabel').textContent = lang === 'en' ? 'PT' : 'EN';
+  document.documentElement.lang = lang === 'en' ? 'en' : 'pt-BR';
+  // Terminal keys
+  updateTerminal();
+}
+
+function updateTerminal() {
+  const isEN = lang === 'en';
+  const tb = document.getElementById('terminalBody');
+  if (!tb) return;
+  tb.innerHTML = `
+    <div><span class="t-prompt">$ </span><span class="t-cmd">cat about.json</span></div>
+    <div>&nbsp;</div>
+    <div><span class="t-comment">{</span></div>
+    <div>&nbsp; <span class="t-key">"${isEN?'name':'nome'}"</span>: <span class="t-str">"PotarDev"</span>,</div>
+    <div>&nbsp; <span class="t-key">"${isEN?'role':'cargo'}"</span>: <span class="t-str">"${isEN?'Indie Dev Beginner':'Dev Indie Iniciante'}"</span>,</div>
+    <div>&nbsp; <span class="t-key">"${isEN?'passion':'paixão'}"</span>: <span class="t-str">"Games &amp; Code"</span>,</div>
+    <div>&nbsp; <span class="t-key">"status"</span>: <span class="t-str">"${isEN?'Learning every day':'Aprendendo cada dia'}"</span>,</div>
+    <div>&nbsp; <span class="t-key">"${isEN?'coffee_today':'café_hoje'}"</span>: <span class="t-num">∞</span></div>
+    <div><span class="t-comment">}</span></div>
+    <div>&nbsp;</div>
+    <div><span class="t-prompt">$ </span><span class="t-cursor"></span></div>
+  `;
+}
+
+/* ── FLOATING PIXELS ── */
+const container = document.getElementById('pixels');
+[
+  {left:'12%',top:'70%'},{left:'8%',top:'40%'},{left:'5%',top:'60%'},
+  {left:'88%',top:'55%'},{left:'92%',top:'75%'},{left:'85%',top:'65%'},
+  {left:'20%',top:'80%'},{left:'75%',top:'80%'},{left:'30%',top:'85%'},
+  {left:'65%',top:'85%'},{left:'45%',top:'90%'},{left:'50%',top:'88%'},
+  {left:'15%',top:'50%'},{left:'82%',top:'45%'},{left:'25%',top:'75%'},
+].forEach(pos => {
+  const el = document.createElement('div');
+  el.className = 'px';
+  el.style.cssText = `left:${pos.left};top:${pos.top};--dur:${3+Math.random()*4}s;--delay:${Math.random()*4}s;--drift:${(Math.random()-.5)*40}px`;
+  container.appendChild(el);
+});
+
+/* ── SMOOTH NAV ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth',block:'start'}); }
+  });
+});
+
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  nav.style.background = window.scrollY > 50 ? 'rgba(6,6,15,.95)' : 'rgba(6,6,15,.7)';
+});
+
+/* ── FADE-IN OBSERVER ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
+  });
+}, {threshold:.1});
+
+document.querySelectorAll('.skill-group,.stat-card,.timeline-item').forEach(el => {
+  el.style.opacity='0';
+  el.style.transform='translateY(20px)';
+  el.style.transition='opacity .6s ease,transform .6s ease';
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
